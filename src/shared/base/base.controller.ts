@@ -1,4 +1,4 @@
-import { Post, Body } from '@nestjs/common';
+import { Post, Body, Get } from '@nestjs/common';
 import { BaseService } from './base.service';
 import { BaseEntity } from './base.entity';
 import { ControllerResponseDto } from './dtos/response/controller-respose.dto';
@@ -7,9 +7,15 @@ export abstract class BaseController<
   TEntity extends BaseEntity,
   TCreateDto,
   TDetailsDto,
+  TListDto,
 > {
   constructor(
-    private readonly baseService: BaseService<TEntity, TCreateDto, TDetailsDto>,
+    private readonly baseService: BaseService<
+      TEntity,
+      TCreateDto,
+      TDetailsDto,
+      TListDto
+    >,
   ) {}
 
   @Post()
@@ -19,6 +25,16 @@ export abstract class BaseController<
     return {
       message: 'Created successfully!',
       data: entityDetails,
+    };
+  }
+
+  @Get()
+  async findAll(): Promise<ControllerResponseDto> {
+    const entitiesList: TListDto[] = await this.baseService.findAll();
+
+    return {
+      message: 'Retrieved successfully!',
+      data: entitiesList,
     };
   }
 }

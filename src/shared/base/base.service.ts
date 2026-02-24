@@ -6,10 +6,16 @@ export abstract class BaseService<
   TEntity extends BaseEntity,
   TCreateDto,
   TDetailsDto,
+  TListDto,
 > {
   constructor(
     private readonly repository: Repository<TEntity>,
-    private readonly factory: IBaseFactory<TEntity, TCreateDto, TDetailsDto>,
+    private readonly factory: IBaseFactory<
+      TEntity,
+      TCreateDto,
+      TDetailsDto,
+      TListDto
+    >,
   ) {}
 
   async create(dto: TCreateDto): Promise<TDetailsDto> {
@@ -21,5 +27,14 @@ export abstract class BaseService<
       this.factory.createDetailsDtoFromEntity(savedEntity);
 
     return entityDetails;
+  }
+
+  async findAll(): Promise<TListDto[]> {
+    const entities: TEntity[] = await this.repository.find();
+
+    const entitiesList: TListDto[] =
+      this.factory.createListDtoFromEntities(entities);
+
+    return entitiesList;
   }
 }
