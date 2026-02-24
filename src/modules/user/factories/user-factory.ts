@@ -4,12 +4,14 @@ import { CreateUserDto } from '../dto/requests/create-user.dto';
 import { UserDetailsDto } from '../dto/responses/user-datails.dto';
 import { UserRole } from '../enums/user-role.enum';
 import { Injectable } from '@nestjs/common';
+import { UserListDto } from '../dto/responses/user-list.dto';
 
 @Injectable()
 export class UserFactory implements IBaseFactory<
   User,
   CreateUserDto,
-  UserDetailsDto
+  UserDetailsDto,
+  UserListDto
 > {
   createEntityFromDto(dto: CreateUserDto): User {
     const user = new User();
@@ -33,5 +35,19 @@ export class UserFactory implements IBaseFactory<
     userDetails.deletedAt = entity.deletedAt;
 
     return userDetails;
+  }
+
+  createListDtoFromEntities(entities: User[]): UserListDto[] {
+    return entities.map((entity) => {
+      const userList = new UserListDto();
+
+      userList.id = entity.id;
+      userList.email = entity.email;
+      userList.role = entity.role;
+      userList.createdAt = entity.createdAt;
+      userList.deletedAt = entity.deletedAt;
+
+      return userList;
+    });
   }
 }

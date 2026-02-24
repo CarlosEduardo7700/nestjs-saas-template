@@ -6,12 +6,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/requests/create-user.dto';
 import { UserDetailsDto } from './dto/responses/user-datails.dto';
 import { UserFactory } from './factories/user-factory';
+import { UserListDto } from './dto/responses/user-list.dto';
 
 @Injectable()
 export class UserService extends BaseService<
   User,
   CreateUserDto,
-  UserDetailsDto
+  UserDetailsDto,
+  UserListDto
 > {
   constructor(
     @InjectRepository(User)
