@@ -1,4 +1,4 @@
-import { Post, Body, Get } from '@nestjs/common';
+import { Post, Body, Get, Param } from '@nestjs/common';
 import { BaseService } from './base.service';
 import { BaseEntity } from './base.entity';
 import { ControllerResponseDto } from './dtos/response/controller-respose.dto';
@@ -35,6 +35,16 @@ export abstract class BaseController<
     return {
       message: 'Retrieved successfully!',
       data: entitiesList,
+    };
+  }
+
+  @Get('/:id')
+  async findById(@Param('id') id: string): Promise<ControllerResponseDto> {
+    const entityDetails: TDetailsDto = await this.baseService.findById(id);
+
+    return {
+      message: `Retrieved successfully! ID: ${id}`,
+      data: entityDetails,
     };
   }
 }

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import IBaseFactory from './base-factory.interface';
 
@@ -36,5 +36,18 @@ export abstract class BaseService<
       this.factory.createListDtoFromEntities(entities);
 
     return entitiesList;
+  }
+
+  async findById(id: string): Promise<TDetailsDto> {
+    const entity: TEntity | null = await this.repository.findOneBy({
+      id,
+    } as FindOptionsWhere<TEntity>);
+
+    if (!entity) throw new Error('Not found!');
+
+    const entityDetails: TDetailsDto =
+      this.factory.createDetailsDtoFromEntity(entity);
+
+    return entityDetails;
   }
 }
