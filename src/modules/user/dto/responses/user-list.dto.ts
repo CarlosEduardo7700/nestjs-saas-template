@@ -5,5 +5,4 @@ export class UserListDto {
   email: string;
   role: UserRole;
   createdAt: Date;
-  deletedAt: Date | null;
 }
