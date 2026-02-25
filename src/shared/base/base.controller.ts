@@ -1,4 +1,4 @@
-import { Post, Body, Get, Param } from '@nestjs/common';
+import { Post, Body, Get, Param, Delete } from '@nestjs/common';
 import { BaseService } from './base.service';
 import { BaseEntity } from './base.entity';
 import { ControllerResponseDto } from './dtos/response/controller-respose.dto';
@@ -45,6 +45,15 @@ export abstract class BaseController<
     return {
       message: `Retrieved successfully! ID: ${id}`,
       data: entityDetails,
+    };
+  }
+
+  @Delete('/:id')
+  async deleteById(@Param('id') id: string): Promise<ControllerResponseDto> {
+    await this.baseService.deleteById(id);
+
+    return {
+      message: `Deleted successfully! ID: ${id}`,
     };
   }
 }

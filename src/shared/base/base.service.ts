@@ -50,4 +50,16 @@ export abstract class BaseService<
 
     return entityDetails;
   }
+
+  async deleteById(id: string): Promise<void> {
+    const entity: TEntity | null = await this.repository.findOneBy({
+      id,
+    } as FindOptionsWhere<TEntity>);
+
+    if (!entity) throw new Error('Not found!');
+
+    if (entity.deletedAt) throw new Error('Already deleted!');
+
+    await this.repository.softDelete(id);
+  }
 }
