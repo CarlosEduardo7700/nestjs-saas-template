@@ -45,7 +45,6 @@ export class UserFactory implements IBaseFactory<
       userList.email = entity.email;
       userList.role = entity.role;
       userList.createdAt = entity.createdAt;
-      userList.deletedAt = entity.deletedAt;
 
       return userList;
     });
