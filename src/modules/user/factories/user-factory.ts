@@ -5,13 +5,15 @@ import { UserDetailsDto } from '../dto/responses/user-datails.dto';
 import { UserRole } from '../enums/user-role.enum';
 import { Injectable } from '@nestjs/common';
 import { UserListDto } from '../dto/responses/user-list.dto';
+import { UpdateUserDto } from '../dto/requests/update-user.dto';
 
 @Injectable()
 export class UserFactory implements IBaseFactory<
   User,
   CreateUserDto,
   UserDetailsDto,
-  UserListDto
+  UserListDto,
+  UpdateUserDto
 > {
   createEntityFromDto(dto: CreateUserDto): User {
     const user = new User();
@@ -48,5 +50,18 @@ export class UserFactory implements IBaseFactory<
 
       return userList;
     });
+  }
+
+  createUpdateDtoFromEntity(dto: UpdateUserDto): Partial<User> {
+    const updatedData: Partial<User> = {};
+
+    if (dto.email) updatedData.email = dto.email;
+    if (dto.password) updatedData.password = dto.password;
+    if (dto.role) updatedData.role = dto.role;
+    if (dto.isPremium) updatedData.isPremium = dto.isPremium;
+    if (dto.stripeCustomerId)
+      updatedData.stripeCustomerId = dto.stripeCustomerId;
+
+    return updatedData;
   }
 }

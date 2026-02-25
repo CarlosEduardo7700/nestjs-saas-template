@@ -7,13 +7,15 @@ import { CreateUserDto } from './dto/requests/create-user.dto';
 import { UserDetailsDto } from './dto/responses/user-datails.dto';
 import { UserFactory } from './factories/user-factory';
 import { UserListDto } from './dto/responses/user-list.dto';
+import { UpdateUserDto } from './dto/requests/update-user.dto';
 
 @Injectable()
 export class UserService extends BaseService<
   User,
   CreateUserDto,
   UserDetailsDto,
-  UserListDto
+  UserListDto,
+  UpdateUserDto
 > {
   constructor(
     @InjectRepository(User)
