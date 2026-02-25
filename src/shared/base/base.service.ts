@@ -8,6 +8,7 @@ export abstract class BaseService<
   TCreateDto,
   TDetailsDto,
   TListDto,
+  TUpdateDto,
 > {
   constructor(
     private readonly repository: Repository<TEntity>,
@@ -15,7 +16,8 @@ export abstract class BaseService<
       TEntity,
       TCreateDto,
       TDetailsDto,
-      TListDto
+      TListDto,
+      TUpdateDto
     >,
   ) {}
 
@@ -48,6 +50,26 @@ export abstract class BaseService<
 
     const entityDetails: TDetailsDto =
       this.factory.createDetailsDtoFromEntity(entity);
+
+    return entityDetails;
+  }
+
+  async update(id: string, dto: TUpdateDto): Promise<TDetailsDto> {
+    const entity: TEntity | null = await this.repository.findOneBy({
+      id,
+    } as FindOptionsWhere<TEntity>);
+
+    if (!entity) throw new NotFoundException('Data not found!');
+
+    const updatedData: Partial<TEntity> =
+      this.factory.createUpdateDtoFromEntity(dto);
+
+    Object.assign(entity, updatedData);
+
+    const updatedEntity: TEntity = await this.repository.save(entity);
+
+    const entityDetails: TDetailsDto =
+      this.factory.createDetailsDtoFromEntity(updatedEntity);
 
     return entityDetails;
   }

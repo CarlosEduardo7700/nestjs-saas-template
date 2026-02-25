@@ -1,4 +1,4 @@
-import { Post, Body, Get, Param, Delete } from '@nestjs/common';
+import { Post, Body, Get, Param, Delete, Patch } from '@nestjs/common';
 import { BaseService } from './base.service';
 import { BaseEntity } from './base.entity';
 import { ControllerResponseDto } from './dtos/response/controller-respose.dto';
@@ -8,13 +8,15 @@ export abstract class BaseController<
   TCreateDto,
   TDetailsDto,
   TListDto,
+  TUpdateDto,
 > {
   constructor(
     private readonly baseService: BaseService<
       TEntity,
       TCreateDto,
       TDetailsDto,
-      TListDto
+      TListDto,
+      TUpdateDto
     >,
   ) {}
 
@@ -44,6 +46,19 @@ export abstract class BaseController<
 
     return {
       message: `Retrieved successfully! ID: ${id}`,
+      data: entityDetails,
+    };
+  }
+
+  @Patch('/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: TUpdateDto,
+  ): Promise<ControllerResponseDto> {
+    const entityDetails: TDetailsDto = await this.baseService.update(id, dto);
+
+    return {
+      message: `Updated successfully! ID: ${id}`,
       data: entityDetails,
     };
   }
