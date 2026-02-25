@@ -1,6 +1,7 @@
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import IBaseFactory from './base-factory.interface';
+import { NotFoundException } from '@nestjs/common';
 
 export abstract class BaseService<
   TEntity extends BaseEntity,
@@ -43,7 +44,7 @@ export abstract class BaseService<
       id,
     } as FindOptionsWhere<TEntity>);
 
-    if (!entity) throw new Error('Not found!');
+    if (!entity) throw new NotFoundException('Data not found!');
 
     const entityDetails: TDetailsDto =
       this.factory.createDetailsDtoFromEntity(entity);
@@ -56,9 +57,9 @@ export abstract class BaseService<
       id,
     } as FindOptionsWhere<TEntity>);
 
-    if (!entity) throw new Error('Not found!');
+    if (!entity) throw new NotFoundException('Data not found!');
 
-    if (entity.deletedAt) throw new Error('Already deleted!');
+    if (entity.deletedAt) throw new NotFoundException('Data already deleted!');
 
     await this.repository.softDelete(id);
   }
