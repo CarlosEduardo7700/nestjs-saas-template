@@ -7,8 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { UserListDto } from '../dto/responses/user-list.dto';
 import { UpdateUserDto } from '../dto/requests/update-user.dto';
 import bcrypt from 'node_modules/bcryptjs';
-
-const SALT_ROUNDS = 10;
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserFactory implements IBaseFactory<
@@ -18,11 +17,17 @@ export class UserFactory implements IBaseFactory<
   UserListDto,
   UpdateUserDto
 > {
+  private saltRounds: number;
+
+  constructor(private configService: ConfigService) {
+    this.saltRounds = this.configService.get<number>('SALT_ROUNDS') || 10;
+  }
+
   async createEntityFromDto(dto: CreateUserDto): Promise<User> {
     const user = new User();
 
     user.email = dto.email;
-    user.password = await bcrypt.hash(dto.password, SALT_ROUNDS);
+    user.password = await bcrypt.hash(dto.password, this.saltRounds);
     user.role = dto.role || UserRole.USER;
     user.stripeCustomerId = dto.stripeCustomerId || '';
 
@@ -60,7 +65,7 @@ export class UserFactory implements IBaseFactory<
 
     if (dto.email) updatedData.email = dto.email;
     if (dto.password)
-      updatedData.password = await bcrypt.hash(dto.password, SALT_ROUNDS);
+      updatedData.password = await bcrypt.hash(dto.password, this.saltRounds);
     if (dto.role) updatedData.role = dto.role;
     if (dto.isPremium) updatedData.isPremium = dto.isPremium;
     if (dto.stripeCustomerId)
