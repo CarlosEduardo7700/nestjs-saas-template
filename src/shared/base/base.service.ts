@@ -22,7 +22,7 @@ export abstract class BaseService<
   ) {}
 
   async create(dto: TCreateDto): Promise<TDetailsDto> {
-    const entity: TEntity = this.factory.createEntityFromDto(dto);
+    const entity: TEntity = await this.factory.createEntityFromDto(dto);
 
     const savedEntity: TEntity = await this.repository.save(entity);
 
@@ -62,7 +62,7 @@ export abstract class BaseService<
     if (!entity) throw new NotFoundException('Data not found!');
 
     const updatedData: Partial<TEntity> =
-      this.factory.createUpdateDtoFromEntity(dto);
+      await this.factory.createUpdateDtoFromEntity(dto);
 
     Object.assign(entity, updatedData);
 

@@ -5,8 +5,8 @@ export default interface IBaseFactory<
   TListDto,
   TUpdateDto,
 > {
-  createEntityFromDto(dto: TCreateDto): TEntity;
+  createEntityFromDto(dto: TCreateDto): Promise<TEntity>;
   createDetailsDtoFromEntity(entity: TEntity): TDetailsDto;
   createListDtoFromEntities(entities: TEntity[]): TListDto[];
-  createUpdateDtoFromEntity(dto: TUpdateDto): Partial<TEntity>;
+  createUpdateDtoFromEntity(dto: TUpdateDto): Promise<Partial<TEntity>>;
 }
