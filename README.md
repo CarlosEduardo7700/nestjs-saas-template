@@ -37,19 +37,29 @@ Crie um arquivo `.env` na raiz do projeto:
 PORT=3000
 DATABASE_URL=postgresql://user:password@localhost:5432/database
 DATABASE_SYNCHRONIZE=true
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=1d
 ```
 
 ## Endpoints
+
+### Auth
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/auth/login` | Autenticar usuário (público) |
 
 ### User
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| `POST` | `/user` | Criar usuário |
+| `POST` | `/user` | Criar usuário (público) |
 | `GET` | `/user` | Listar usuários |
 | `GET` | `/user/:id` | Buscar usuário por ID |
 | `PATCH` | `/user/:id` | Atualizar usuário |
 | `DELETE` | `/user/:id` | Deletar usuário |
+
+> **Nota:** Exceto rotas marcadas como públicas, todos os endpoints requerem autenticação via Bearer Token no header `Authorization`.
 
 ## Scripts Disponíveis
 
@@ -80,7 +90,6 @@ Disponível em: `http://localhost:3000`
 
 ## Roadmap
 
-- [ ] Módulo de Autenticação (JWT)
 - [ ] Integração completa com Stripe
 - [ ] Testes unitários e e2e
 - [ ] Docker e docker-compose
