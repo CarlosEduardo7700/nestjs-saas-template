@@ -25,9 +25,11 @@ export class UserService extends BaseService<
     super(userRepository, userFactory);
   }
 
-  async getUserByEmail(email: string): Promise<User | null> {
-    const user: User | null = await this.userRepository.findOneBy({ email });
-
+  async getUserByEmailForAuth(email: string): Promise<User | null> {
+    const user: User | null = await this.userRepository.findOne({
+      where: { email },
+      select: ['password'],
+    });
     return user;
   }
 }
