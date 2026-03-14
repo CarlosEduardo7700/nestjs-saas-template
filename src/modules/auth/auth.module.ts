@@ -23,6 +23,7 @@ import { SignOptions } from 'jsonwebtoken';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtModule],
+  providers: [AuthService],
+  exports: [JwtModule],
 })
 export class AuthModule {}

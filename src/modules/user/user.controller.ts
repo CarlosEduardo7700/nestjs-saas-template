@@ -7,6 +7,7 @@ import { UserDetailsDto } from './dto/responses/user-datails.dto';
 import { UserListDto } from './dto/responses/user-list.dto';
 import { UpdateUserDto } from './dto/requests/update-user.dto';
 import { ControllerResponseDto } from 'src/shared/base/dtos/response/controller-respose.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('user')
 export class UserController extends BaseController<
@@ -21,6 +22,7 @@ export class UserController extends BaseController<
   }
 
   @Post()
+  @Public()
   async create(@Body() dto: CreateUserDto): Promise<ControllerResponseDto> {
     const entityDetails: UserDetailsDto = await this.userService.create(dto);
 
