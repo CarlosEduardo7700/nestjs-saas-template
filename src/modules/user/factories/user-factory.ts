@@ -6,7 +6,7 @@ import { UserRole } from '../enums/user-role.enum';
 import { Injectable } from '@nestjs/common';
 import { UserListDto } from '../dto/responses/user-list.dto';
 import { UpdateUserDto } from '../dto/requests/update-user.dto';
-import bcrypt from 'node_modules/bcryptjs';
+import bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
