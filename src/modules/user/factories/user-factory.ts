@@ -20,7 +20,8 @@ export class UserFactory implements IBaseFactory<
   private saltRounds: number;
 
   constructor(private configService: ConfigService) {
-    this.saltRounds = this.configService.get<number>('SALT_ROUNDS') || 10;
+    this.saltRounds =
+      Number(this.configService.get<number>('SALT_ROUNDS')) || 10;
   }
 
   async createEntityFromDto(dto: CreateUserDto): Promise<User> {
