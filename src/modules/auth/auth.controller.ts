@@ -8,8 +8,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
-  login(@Body() loginDto: LoginDto): ControllerResponseDto {
-    const token: string = this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto): Promise<ControllerResponseDto> {
+    const token: string = await this.authService.login(loginDto);
 
     return {
       message: 'Login successful!',

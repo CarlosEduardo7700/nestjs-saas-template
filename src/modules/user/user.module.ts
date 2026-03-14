@@ -9,5 +9,6 @@ import { UserFactory } from './factories/user-factory';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserController],
   providers: [UserService, UserFactory],
+  exports: [UserService],
 })
 export class UserModule {}
