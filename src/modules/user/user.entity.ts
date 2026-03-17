@@ -17,5 +17,5 @@ export class User extends BaseEntity {
   isPremium: boolean;
 
   @Column({ nullable: true })
-  stripeCustomerId: string;
+  stripeCustomerId: string | null;
 }
