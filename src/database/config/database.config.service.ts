@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
@@ -16,9 +14,9 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       synchronize: this.configService.get<boolean>(
         'DATABASE_SYNCHRONIZE',
       ) as boolean,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: this.configService.get<boolean>('DATABASE_SSL')
+        ? { rejectUnauthorized: false }
+        : false,
     };
   }
 }
