@@ -1,7 +1,7 @@
 import { Body, Controller, Patch, Post, Req } from '@nestjs/common';
 import { Public } from 'src/common/decorators/public.decorator';
 import { BaseController } from 'src/shared/base/base.controller';
-import { ControllerResponseDto } from 'src/shared/base/dtos/response/controller-respose.dto';
+import { ControllerResponseDto } from 'src/shared/base/dtos/response/controller-response.dto';
 import type { AuthRequest } from '../auth/interface/auth-request.interface';
 import { CreateUserDto } from './dto/requests/create-user.dto';
 import { UpdateUserDto } from './dto/requests/update-user.dto';

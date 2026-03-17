@@ -2,7 +2,7 @@ import { Delete, Get, Req } from '@nestjs/common';
 import type { AuthRequest } from 'src/modules/auth/interface/auth-request.interface';
 import { BaseEntity } from './base.entity';
 import { BaseService } from './base.service';
-import { ControllerResponseDto } from './dtos/response/controller-respose.dto';
+import { ControllerResponseDto } from './dtos/response/controller-response.dto';
 
 export abstract class BaseController<
   TEntity extends BaseEntity,
