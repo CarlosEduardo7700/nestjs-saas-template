@@ -19,7 +19,7 @@ export class CreateUserDto {
   @MinLength(8)
   @Matches(passwordRegex, {
     message:
-      'The password must contain at least a uppercase letter, a lowercase, a number and a special character (!@#$%^&*).',
+      'The password must contain at least an uppercase letter, a lowercase letter, a number, and a special character (!@#$%^&*).',
   })
   password: string;
 
