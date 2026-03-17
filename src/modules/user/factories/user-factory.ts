@@ -68,7 +68,7 @@ export class UserFactory implements IBaseFactory<
     if (dto.password)
       updatedData.password = await bcrypt.hash(dto.password, this.saltRounds);
     if (dto.role) updatedData.role = dto.role;
-    if (dto.isPremium) updatedData.isPremium = dto.isPremium;
+    if (dto.isPremium !== undefined) updatedData.isPremium = dto.isPremium;
     if (dto.stripeCustomerId)
       updatedData.stripeCustomerId = dto.stripeCustomerId;
 
