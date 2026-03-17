@@ -5,7 +5,7 @@ import { ControllerResponseDto } from 'src/shared/base/dtos/response/controller-
 import type { AuthRequest } from '../auth/interface/auth-request.interface';
 import { CreateUserDto } from './dto/requests/create-user.dto';
 import { UpdateUserDto } from './dto/requests/update-user.dto';
-import { UserDetailsDto } from './dto/responses/user-datails.dto';
+import { UserDetailsDto } from './dto/responses/user-details.dto';
 import { UserListDto } from './dto/responses/user-list.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';

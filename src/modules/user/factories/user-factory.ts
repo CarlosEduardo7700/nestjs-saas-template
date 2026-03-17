@@ -1,7 +1,7 @@
 import IBaseFactory from 'src/shared/base/base-factory.interface';
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dto/requests/create-user.dto';
-import { UserDetailsDto } from '../dto/responses/user-datails.dto';
+import { UserDetailsDto } from '../dto/responses/user-details.dto';
 import { UserRole } from '../enums/user-role.enum';
 import { Injectable } from '@nestjs/common';
 import { UserListDto } from '../dto/responses/user-list.dto';
