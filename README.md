@@ -39,7 +39,10 @@ DATABASE_URL=postgresql://user:password@localhost:5432/database
 DATABASE_SYNCHRONIZE=true
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=1d
+SALT_ROUNDS=10
 ```
+
+> **Opcional:** Se `SALT_ROUNDS` não for definido, o valor padrão utilizado pela aplicação é `10`.
 
 ## Endpoints
 
