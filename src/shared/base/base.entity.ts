@@ -28,5 +28,5 @@ export abstract class BaseEntity {
     nullable: true,
     type: 'timestamp with time zone',
   })
-  deletedAt: Date;
+  deletedAt: Date | null;
 }
