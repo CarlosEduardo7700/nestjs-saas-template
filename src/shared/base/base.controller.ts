@@ -1,5 +1,4 @@
-import { Delete, Get, Req } from '@nestjs/common';
-import type { AuthRequest } from 'src/modules/auth/interface/auth-request.interface';
+import { Delete, Get, Param } from '@nestjs/common';
 import { BaseEntity } from './base.entity';
 import { BaseService } from './base.service';
 import { ControllerResponseDto } from './dtos/response/controller-response.dto';
@@ -23,10 +22,7 @@ export abstract class BaseController<
 
   abstract create(dto: TCreateDto): Promise<ControllerResponseDto>;
 
-  abstract update(
-    request: AuthRequest,
-    dto: TUpdateDto,
-  ): Promise<ControllerResponseDto>;
+  abstract update(id: string, dto: TUpdateDto): Promise<ControllerResponseDto>;
 
   @Get()
   async findAll(): Promise<ControllerResponseDto> {
@@ -38,9 +34,8 @@ export abstract class BaseController<
     };
   }
 
-  @Get('/details')
-  async findById(@Req() request: AuthRequest): Promise<ControllerResponseDto> {
-    const id: string = request.userData.sub;
+  @Get(':id')
+  async findById(@Param('id') id: string): Promise<ControllerResponseDto> {
     const entityDetails: TDetailsDto = await this.baseService.findById(id);
 
     return {
@@ -49,11 +44,8 @@ export abstract class BaseController<
     };
   }
 
-  @Delete()
-  async deleteById(
-    @Req() request: AuthRequest,
-  ): Promise<ControllerResponseDto> {
-    const id: string = request.userData.sub;
+  @Delete(':id')
+  async deleteById(@Param('id') id: string): Promise<ControllerResponseDto> {
     await this.baseService.deleteById(id);
 
     return {
