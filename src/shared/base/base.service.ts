@@ -81,8 +81,6 @@ export abstract class BaseService<
 
     if (!entity) throw new NotFoundException('Data not found!');
 
-    if (entity.deletedAt) throw new NotFoundException('Data already deleted!');
-
     await this.repository.softDelete(id);
   }
 }
