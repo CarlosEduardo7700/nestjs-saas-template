@@ -28,7 +28,7 @@ export class UserService extends BaseService<
   async getUserByEmailForAuth(email: string): Promise<User | null> {
     const user: User | null = await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'password', 'email'],
+      select: ['id', 'password', 'email', 'role'],
     });
     return user;
   }
