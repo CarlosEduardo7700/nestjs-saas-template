@@ -9,9 +9,9 @@ import {
   Req,
 } from '@nestjs/common';
 import { Public } from 'src/common/decorators/public.decorator';
-import { BaseController } from 'src/shared/base/base.controller';
-import { ControllerResponseDto } from 'src/shared/base/dtos/response/controller-response.dto';
-import type { AuthRequest } from '../auth/interface/auth-request.interface';
+import { BaseController } from 'src/common/base/base.controller';
+import { ControllerResponseDto } from 'src/common/base/dtos/response/controller-response.dto';
+import type { AuthRequest } from '../../common/interface/auth-request.interface';
 import { CreateUserDto } from './dto/requests/create-user.dto';
 import { UpdateUserDto } from './dto/requests/update-user.dto';
 import { UserDetailsDto } from './dto/responses/user-details.dto';

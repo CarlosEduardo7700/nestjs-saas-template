@@ -1,4 +1,4 @@
-import IBaseFactory from 'src/shared/base/base-factory.interface';
+import IBaseFactory from 'src/common/base/base-factory.interface';
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dto/requests/create-user.dto';
 import { UserDetailsDto } from '../dto/responses/user-details.dto';
