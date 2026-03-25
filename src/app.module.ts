@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './common/guards/auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     }),
     UserModule,
     AuthModule,
+    PaymentsModule,
   ],
   controllers: [],
   providers: [
