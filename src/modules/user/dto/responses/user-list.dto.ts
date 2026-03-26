@@ -4,5 +4,6 @@ export class UserListDto {
   id: string;
   email: string;
   role: UserRole;
+  isPremium?: boolean;
   createdAt: Date;
 }
