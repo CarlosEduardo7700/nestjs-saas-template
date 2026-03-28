@@ -1,4 +1,4 @@
-import { Delete, Get, Param } from '@nestjs/common';
+import { Delete, Get, Param, Query } from '@nestjs/common';
 import { BaseEntity } from './base.entity';
 import { BaseService } from './base.service';
 import { ControllerResponseDto } from './dtos/response/controller-response.dto';
@@ -25,12 +25,29 @@ export abstract class BaseController<
   abstract update(id: string, dto: TUpdateDto): Promise<ControllerResponseDto>;
 
   @Get()
-  async findAll(): Promise<ControllerResponseDto> {
-    const entitiesList: TListDto[] = await this.baseService.findAll();
+  async findAll(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ): Promise<ControllerResponseDto> {
+    const currentPage: number = page || 1;
+    const itemsPerPage: number = limit || 10;
+
+    const { entitiesList, totalItems } = await this.baseService.findAll(
+      currentPage,
+      itemsPerPage,
+    );
 
     return {
       message: 'Retrieved successfully!',
-      data: entitiesList,
+      data: {
+        items: entitiesList,
+        currentPage,
+        itemsPerPage,
+        totalPages: Math.ceil(totalItems / itemsPerPage),
+        totalItems,
+        hasNextPage: currentPage < Math.ceil(totalItems / itemsPerPage),
+        hasPreviousPage: currentPage > 1,
+      },
     };
   }
 
