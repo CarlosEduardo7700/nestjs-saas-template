@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   RawBodyRequest,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -24,9 +25,14 @@ export class PaymentsService {
       'STRIPE_WEBHOOK_SECRET',
     );
 
-    if (!secretKey) throw new Error('Stripe secret key is not configured!');
+    if (!secretKey)
+      throw new InternalServerErrorException(
+        'Stripe secret key is not configured!',
+      );
     if (!endpointSecret)
-      throw new Error('Stripe webhook secret is not configured!');
+      throw new InternalServerErrorException(
+        'Stripe webhook secret is not configured!',
+      );
 
     this.stripe = new Stripe(secretKey, {
       apiVersion: '2026-02-25.clover',
