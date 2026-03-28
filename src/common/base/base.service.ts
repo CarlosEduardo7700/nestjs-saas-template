@@ -1,4 +1,9 @@
-import { Repository, FindOptionsWhere } from 'typeorm';
+import {
+  Repository,
+  FindOptionsWhere,
+  FindManyOptions,
+  FindOptionsOrder,
+} from 'typeorm';
 import { BaseEntity } from './base.entity';
 import IBaseFactory from './base-factory.interface';
 import { NotFoundException } from '@nestjs/common';
@@ -32,13 +37,27 @@ export abstract class BaseService<
     return entityDetails;
   }
 
-  async findAll(): Promise<TListDto[]> {
-    const entities: TEntity[] = await this.repository.find();
+  async findAll(
+    currentPage: number,
+    itemsPerPage: number,
+  ): Promise<{ entitiesList: TListDto[]; totalItems: number }> {
+    const skipItems: number = (currentPage - 1) * itemsPerPage;
+
+    const queryOptions: FindManyOptions<TEntity> = {
+      take: itemsPerPage,
+      skip: skipItems,
+      order: {
+        updatedAt: 'DESC',
+      } as FindOptionsOrder<TEntity>,
+    };
+
+    const [entities, totalCount]: [TEntity[], number] =
+      await this.repository.findAndCount(queryOptions);
 
     const entitiesList: TListDto[] =
       this.factory.createListDtoFromEntities(entities);
 
-    return entitiesList;
+    return { entitiesList, totalItems: totalCount };
   }
 
   async findById(id: string): Promise<TDetailsDto> {
