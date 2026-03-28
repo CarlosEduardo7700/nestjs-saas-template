@@ -41,6 +41,7 @@ export class UserFactory implements IBaseFactory<
     userDetails.id = entity.id;
     userDetails.email = entity.email;
     userDetails.role = entity.role;
+    userDetails.isPremium = entity.isPremium;
     userDetails.createdAt = entity.createdAt;
     userDetails.updatedAt = entity.updatedAt;
     userDetails.deletedAt = entity.deletedAt;
@@ -54,6 +55,7 @@ export class UserFactory implements IBaseFactory<
 
       userList.id = entity.id;
       userList.email = entity.email;
+      userList.isPremium = entity.isPremium;
       userList.role = entity.role;
       userList.createdAt = entity.createdAt;
 
