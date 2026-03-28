@@ -1,8 +1,9 @@
 import { Controller, Headers, Post, Req } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
 import { ControllerResponseDto } from 'src/common/base/dtos/response/controller-response.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import type { AuthRequest } from 'src/common/interface/auth-request.interface';
-import { Stripe } from 'stripe';
+import Stripe from 'stripe';
 import { PaymentsService } from './payments.service';
 import { UserDetailsDto } from '../user/dto/responses/user-details.dto';
 
@@ -27,7 +28,7 @@ export class PaymentsController {
   @Public()
   @Post('webhook')
   async handlePaymentWebhook(
-    @Req() request: Request,
+    @Req() request: RawBodyRequest<Request>,
     @Headers('stripe-signature') signature: string,
   ): Promise<ControllerResponseDto> {
     const userDetails: void | UserDetailsDto =
