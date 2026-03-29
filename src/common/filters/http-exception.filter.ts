@@ -66,18 +66,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message,
     };
 
-    if (status >= 500) {
-      this.logger.error(
-        `${request.method} ${request.url} - ${status}`,
-        JSON.stringify(errorResponse),
-      );
-    } else {
-      this.logger.warn(
-        `${request.method} ${request.url} - ${status}`,
-        JSON.stringify(errorResponse),
-      );
-    }
-
     response.status(status).json(errorResponse);
   }
 }
