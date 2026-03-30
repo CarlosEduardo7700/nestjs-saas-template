@@ -1,8 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { UserRole } from 'src/modules/user/enums/user-role.enum';
@@ -28,7 +28,7 @@ export class RolesGuard implements CanActivate {
     const userRole: UserRole = request.userData?.role;
 
     if (!userRole || !requiredRoles.includes(userRole))
-      throw new UnauthorizedException('Insufficient permissions.');
+      throw new ForbiddenException('Insufficient permissions.');
 
     return true;
   }

@@ -44,6 +44,44 @@ SALT_ROUNDS=10
 
 > **Opcional:** Se `SALT_ROUNDS` não for definido, o valor padrão utilizado pela aplicação é `10`.
 
+## Migrations
+
+O projeto utiliza TypeORM para gerenciar migrations do banco de dados.
+
+### Gerar Migration
+
+Gera uma migration com base nas diferenças entre as entidades e o banco:
+
+```bash
+npm run migration:generate src/database/migrations/nome-da-migration
+```
+
+> **Nota:** Para funcionar corretamente, `DATABASE_SYNCHRONIZE` deve estar `false` no `.env`.
+
+### Executar Migrations
+
+Aplica todas as migrations pendentes:
+
+```bash
+npm run migration:run
+```
+
+### Reverter Migration
+
+Reverte a última migration executada:
+
+```bash
+npm run migration:revert
+```
+
+### Criar Migration Vazia
+
+Cria uma migration vazia para escrita manual:
+
+```bash
+npm run migration:create src/database/migrations/nome-da-migration
+```
+
 ## Endpoints
 
 ### Auth
