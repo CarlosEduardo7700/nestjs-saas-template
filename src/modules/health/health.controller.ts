@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   HealthCheck,
   HealthCheckService,
@@ -9,6 +10,7 @@ import {
 import { Public } from 'src/common/decorators/public.decorator';
 import { SkipThrottle } from '@nestjs/throttler';
 
+@ApiTags('Health')
 @Controller('health')
 export class HealthController {
   constructor(
@@ -22,6 +24,7 @@ export class HealthController {
   @Public()
   @SkipThrottle()
   @HealthCheck()
+  @ApiOperation({ summary: 'Full health check (DB, memory, disk)' })
   check() {
     return this.health.check([
       () => this.db.pingCheck('database', { timeout: 5000 }),
@@ -42,6 +45,7 @@ export class HealthController {
   @Public()
   @SkipThrottle()
   @HealthCheck()
+  @ApiOperation({ summary: 'Liveness probe' })
   liveness() {
     return this.health.check([]);
   }
@@ -50,6 +54,7 @@ export class HealthController {
   @Public()
   @SkipThrottle()
   @HealthCheck()
+  @ApiOperation({ summary: 'Readiness probe (DB connected)' })
   readiness() {
     return this.health.check([
       () => this.db.pingCheck('database', { timeout: 5000 }),

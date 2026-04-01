@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -8,12 +9,14 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
   @Public()
+  @ApiOperation({ summary: 'Authenticate user and get JWT token' })
   @Throttle({
     short: { ttl: 1000, limit: 1 },
     medium: { ttl: 60000, limit: 5 },
@@ -30,6 +33,7 @@ export class AuthController {
 
   @Post('/forgot-password')
   @Public()
+  @ApiOperation({ summary: 'Request password reset email' })
   @Throttle({
     short: { ttl: 1000, limit: 1 },
     medium: { ttl: 60000, limit: 3 },
@@ -48,6 +52,7 @@ export class AuthController {
 
   @Post('/reset-password')
   @Public()
+  @ApiOperation({ summary: 'Reset password with token' })
   @Throttle({
     short: { ttl: 1000, limit: 1 },
     medium: { ttl: 60000, limit: 5 },
