@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/base/base.service';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/requests/create-user.dto';
 import { UpdateUserDto } from './dto/requests/update-user.dto';
 import { UserDetailsDto } from './dto/responses/user-details.dto';
@@ -33,6 +33,12 @@ export class UserService extends BaseService<
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { email },
+    });
+  }
+
   async getUserByIdForPayment(userId: string): Promise<User> {
     const user: User | null = await this.userRepository.findOne({
       where: { id: userId },
@@ -42,6 +48,16 @@ export class UserService extends BaseService<
     if (!user) throw new NotFoundException('User not found');
 
     return user;
+  }
+
+  async getUserByResetToken(token: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: {
+        passwordResetToken: token,
+        passwordResetExpires: MoreThan(new Date()),
+      },
+      select: ['id', 'email', 'passwordResetToken', 'passwordResetExpires'],
+    });
   }
 
   async updateByCustomerId(
@@ -55,5 +71,13 @@ export class UserService extends BaseService<
     if (!user) throw new NotFoundException('User not found');
 
     return this.update(user.id, updateUserDto);
+  }
+
+  async updatePassword(userId: string, hashedPassword: string): Promise<void> {
+    await this.userRepository.update(userId, {
+      password: hashedPassword,
+      passwordResetToken: undefined,
+      passwordResetExpires: undefined,
+    });
   }
 }

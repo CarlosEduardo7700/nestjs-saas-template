@@ -67,11 +67,18 @@ export class UserFactory implements IBaseFactory<
     const updatedData: Partial<User> = {};
 
     if (dto.email) updatedData.email = dto.email;
-    if (dto.password)
+    if (dto.password) {
       updatedData.password = await bcrypt.hash(dto.password, this.saltRounds);
+      updatedData.passwordResetToken = undefined;
+      updatedData.passwordResetExpires = undefined;
+    }
     if (dto.isPremium !== undefined) updatedData.isPremium = dto.isPremium;
     if (dto.stripeCustomerId)
       updatedData.stripeCustomerId = dto.stripeCustomerId;
+    if (dto.passwordResetToken)
+      updatedData.passwordResetToken = dto.passwordResetToken;
+    if (dto.passwordResetExpires)
+      updatedData.passwordResetExpires = dto.passwordResetExpires;
 
     return updatedData;
   }
