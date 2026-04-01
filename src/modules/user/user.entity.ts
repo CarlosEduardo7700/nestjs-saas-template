@@ -18,4 +18,10 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   stripeCustomerId?: string;
+
+  @Column({ nullable: true, select: false })
+  passwordResetToken?: string;
+
+  @Column({ type: 'timestamp', nullable: true, select: false })
+  passwordResetExpires?: Date;
 }

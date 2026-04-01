@@ -1,17 +1,28 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
-import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
-import bcrypt from 'bcryptjs';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { LoginResponseDto } from './dto/login-response.dto';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { JwtPayload } from '../../common/interface/jwt-payload.interface';
+import { EmailService } from '../email/email.service';
+import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { LoginDto } from './dto/login.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
+    private readonly configService: ConfigService,
   ) {}
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
@@ -32,5 +43,53 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+    const user: User | null = await this.userService.getUserByEmail(
+      forgotPasswordDto.email,
+    );
+
+    if (!user) return;
+
+    const resetToken: string = crypto.randomBytes(32).toString('hex');
+    const hashedToken: string = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    const resetExpires: Date = new Date(Date.now() + 60 * 60 * 1000);
+
+    await this.userService.update(user.id, {
+      passwordResetToken: hashedToken,
+      passwordResetExpires: resetExpires,
+    });
+
+    await this.emailService.sendPasswordResetEmail(user.email, resetToken);
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+    const hashedToken: string = crypto
+      .createHash('sha256')
+      .update(resetPasswordDto.token)
+      .digest('hex');
+
+    const user: User | null = await this.userService.getUserByResetToken(hashedToken);
+
+    if (!user) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
+
+    const saltRounds: number = parseInt(
+      this.configService.get<string>('SALT_ROUNDS') || '10',
+    );
+    const hashedPassword: string = await bcrypt.hash(
+      resetPasswordDto.newPassword,
+      saltRounds,
+    );
+
+    await this.userService.updatePassword(user.id, hashedPassword);
+
+    await this.emailService.sendPasswordResetSuccessEmail(user.email);
   }
 }

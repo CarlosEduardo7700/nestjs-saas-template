@@ -9,6 +9,7 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SubscriptionGuard } from './common/guards/subscription.guard';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { EmailModule } from './modules/email/email.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConfigService,
     }),
+    EmailModule,
     UserModule,
     AuthModule,
     PaymentsModule,

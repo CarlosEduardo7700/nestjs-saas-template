@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -20,6 +21,7 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from './enums/user-role.enum';
+import { EmailService } from '../email/email.service';
 
 @Controller('user')
 export class UserController extends BaseController<
@@ -29,7 +31,12 @@ export class UserController extends BaseController<
   UserListDto,
   UpdateUserDto
 > {
-  constructor(private readonly userService: UserService) {
+  private readonly logger = new Logger(UserController.name);
+
+  constructor(
+    private readonly userService: UserService,
+    private readonly emailService: EmailService,
+  ) {
     super(userService);
   }
 
@@ -37,6 +44,10 @@ export class UserController extends BaseController<
   @Public()
   async create(@Body() dto: CreateUserDto): Promise<ControllerResponseDto> {
     const entityDetails: UserDetailsDto = await this.userService.create(dto);
+
+    this.emailService.sendWelcomeEmail(entityDetails.email).catch((error) => {
+      this.logger.error('Failed to send welcome email:', error);
+    });
 
     return {
       message: 'Created successfully!',
