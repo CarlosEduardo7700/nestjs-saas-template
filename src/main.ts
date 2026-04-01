@@ -10,7 +10,6 @@ async function bootstrap() {
     rawBody: true,
   });
 
-  // CORS
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3001',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -18,7 +17,6 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Swagger
   const config = new DocumentBuilder()
     .setTitle(process.env.APP_NAME || 'NestJS SaaS API')
     .setDescription('API documentation for NestJS SaaS Template')
@@ -40,7 +38,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   const port = process.env.PORT ?? 3000;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
   Logger.log(`Application running on http://localhost:${port}`, 'Bootstrap');
   Logger.log(`Swagger docs at http://localhost:${port}/api/docs`, 'Bootstrap');
