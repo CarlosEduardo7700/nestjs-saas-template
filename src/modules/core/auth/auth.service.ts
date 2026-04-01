@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { JwtPayload } from '../../common/interface/jwt-payload.interface';
+import { JwtPayload } from '../../../common/interface/jwt-payload.interface';
 import { EmailService } from '../email/email.service';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
