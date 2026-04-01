@@ -15,6 +15,8 @@ Template base para construção de aplicações SaaS utilizando NestJS. Inclui a
 - **PostgreSQL** - Banco de dados relacional
 - **class-validator** - Validação de dados com decorators
 - **TypeScript** - Superset tipado do JavaScript
+- **Resend** - Email transacional
+- **Stripe** - Processamento de pagamentos
 
 ## Setup Inicial
 
@@ -34,12 +36,30 @@ npm install
 Crie um arquivo `.env` na raiz do projeto:
 
 ```env
+# Server
 PORT=3000
+
+# Database
 DATABASE_URL=postgresql://user:password@localhost:5432/database
 DATABASE_SYNCHRONIZE=true
+
+# JWT
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=1d
 SALT_ROUNDS=10
+
+# Email (Resend)
+RESEND_API_KEY=re_xxxxxxxxxxxx
+EMAIL_FROM=noreply@yourdomain.com
+APP_NAME=Your App Name
+
+# Stripe
+STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxx
+STRIPE_PRICE_ID=price_xxxxxxxxxxxx
+
+# Frontend
+FRONTEND_URL=http://localhost:3001
 ```
 
 > **Opcional:** Se `SALT_ROUNDS` não for definido, o valor padrão utilizado pela aplicação é `10`.
@@ -89,6 +109,8 @@ npm run migration:create src/database/migrations/nome-da-migration
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | `POST` | `/auth/login` | Autenticar usuário (público) |
+| `POST` | `/auth/forgot-password` | Solicitar reset de senha (público) |
+| `POST` | `/auth/reset-password` | Resetar senha com token (público) |
 
 ### User
 
