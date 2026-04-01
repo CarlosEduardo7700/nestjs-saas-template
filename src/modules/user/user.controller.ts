@@ -9,6 +9,7 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { Public } from 'src/common/decorators/public.decorator';
 import { BaseController } from 'src/common/base/base.controller';
@@ -24,6 +25,8 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from './enums/user-role.enum';
 import { EmailService } from '../email/email.service';
 
+@ApiTags('User')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController extends BaseController<
   User,
@@ -43,6 +46,7 @@ export class UserController extends BaseController<
 
   @Post()
   @Public()
+  @ApiOperation({ summary: 'Create a new user (public)' })
   @Throttle({
     short: { ttl: 1000, limit: 1 },
     medium: { ttl: 60000, limit: 5 },
@@ -62,6 +66,7 @@ export class UserController extends BaseController<
   }
 
   @Patch('me')
+  @ApiOperation({ summary: 'Update current user profile' })
   async updateProfile(
     @Req() request: AuthRequest,
     @Body() dto: UpdateUserDto,

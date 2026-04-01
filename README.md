@@ -19,6 +19,7 @@ Template base para construção de aplicações SaaS utilizando NestJS. Inclui a
 - **Stripe** - Processamento de pagamentos
 - **Throttler** - Rate limiting para proteção da API
 - **Terminus** - Health checks para monitoramento
+- **Swagger** - Documentação automática da API
 
 ## Setup Inicial
 
@@ -133,6 +134,36 @@ npm run migration:create src/database/migrations/nome-da-migration
 | `GET` | `/health/ready` | Readiness probe (banco conectado) |
 
 > **Nota:** Exceto rotas marcadas como públicas, todos os endpoints requerem autenticação via Bearer Token no header `Authorization`.
+
+## Documentação da API (Swagger)
+
+A documentação interativa da API está disponível em:
+
+```
+http://localhost:3000/api/docs
+```
+
+Na interface do Swagger você pode:
+- Visualizar todos os endpoints disponíveis
+- Testar requisições diretamente no navegador
+- Autenticar usando o botão "Authorize" (Bearer Token)
+- Ver schemas de request/response
+
+## CORS
+
+CORS está configurado por padrão para aceitar requisições do frontend:
+
+```typescript
+// main.ts
+app.enableCors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+});
+```
+
+Para produção, defina `FRONTEND_URL` no `.env` com a URL do seu frontend.
 
 ## Health Checks
 
