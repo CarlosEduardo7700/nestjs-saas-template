@@ -9,6 +9,7 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Public } from 'src/common/decorators/public.decorator';
 import { BaseController } from 'src/common/base/base.controller';
 import { ControllerResponseDto } from 'src/common/base/dtos/response/controller-response.dto';
@@ -42,6 +43,11 @@ export class UserController extends BaseController<
 
   @Post()
   @Public()
+  @Throttle({
+    short: { ttl: 1000, limit: 1 },
+    medium: { ttl: 60000, limit: 5 },
+    long: { ttl: 3600000, limit: 10 },
+  })
   async create(@Body() dto: CreateUserDto): Promise<ControllerResponseDto> {
     const entityDetails: UserDetailsDto = await this.userService.create(dto);
 

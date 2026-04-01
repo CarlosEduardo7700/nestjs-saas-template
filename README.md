@@ -17,6 +17,7 @@ Template base para construção de aplicações SaaS utilizando NestJS. Inclui a
 - **TypeScript** - Superset tipado do JavaScript
 - **Resend** - Email transacional
 - **Stripe** - Processamento de pagamentos
+- **Throttler** - Rate limiting para proteção da API
 
 ## Setup Inicial
 
@@ -123,6 +124,29 @@ npm run migration:create src/database/migrations/nome-da-migration
 | `DELETE` | `/user/:id` | Deletar usuário |
 
 > **Nota:** Exceto rotas marcadas como públicas, todos os endpoints requerem autenticação via Bearer Token no header `Authorization`.
+
+## Rate Limiting
+
+A API possui proteção contra abuso com limites de requisições:
+
+### Limites Globais
+
+| Janela | Limite |
+|--------|--------|
+| 1 segundo | 3 requests |
+| 10 segundos | 20 requests |
+| 1 minuto | 100 requests |
+
+### Limites em Rotas Sensíveis
+
+| Rota | Limite |
+|------|--------|
+| `POST /auth/login` | 5/min, 20/hora |
+| `POST /auth/forgot-password` | 3/min, 5/hora |
+| `POST /auth/reset-password` | 5/min, 10/hora |
+| `POST /user` (cadastro) | 5/min, 10/hora |
+
+> **Nota:** Quando o limite é excedido, a API retorna status `429 Too Many Requests`.
 
 ## Scripts Disponíveis
 

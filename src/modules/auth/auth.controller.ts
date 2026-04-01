@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ControllerResponseDto } from 'src/common/base/dtos/response/controller-response.dto';
@@ -13,6 +14,11 @@ export class AuthController {
 
   @Post('/login')
   @Public()
+  @Throttle({
+    short: { ttl: 1000, limit: 1 },
+    medium: { ttl: 60000, limit: 5 },
+    long: { ttl: 3600000, limit: 20 },
+  })
   async login(@Body() loginDto: LoginDto): Promise<ControllerResponseDto> {
     const token: LoginResponseDto = await this.authService.login(loginDto);
 
@@ -24,6 +30,11 @@ export class AuthController {
 
   @Post('/forgot-password')
   @Public()
+  @Throttle({
+    short: { ttl: 1000, limit: 1 },
+    medium: { ttl: 60000, limit: 3 },
+    long: { ttl: 3600000, limit: 5 },
+  })
   async forgotPassword(
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<ControllerResponseDto> {
@@ -37,6 +48,11 @@ export class AuthController {
 
   @Post('/reset-password')
   @Public()
+  @Throttle({
+    short: { ttl: 1000, limit: 1 },
+    medium: { ttl: 60000, limit: 5 },
+    long: { ttl: 3600000, limit: 10 },
+  })
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<ControllerResponseDto> {
