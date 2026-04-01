@@ -18,6 +18,7 @@ Template base para construção de aplicações SaaS utilizando NestJS. Inclui a
 - **Resend** - Email transacional
 - **Stripe** - Processamento de pagamentos
 - **Throttler** - Rate limiting para proteção da API
+- **Terminus** - Health checks para monitoramento
 
 ## Setup Inicial
 
@@ -123,7 +124,62 @@ npm run migration:create src/database/migrations/nome-da-migration
 | `PATCH` | `/user/:id` | Atualizar usuário |
 | `DELETE` | `/user/:id` | Deletar usuário |
 
+### Health
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/health` | Status completo (DB, memória, disco) |
+| `GET` | `/health/live` | Liveness probe (aplicação responde) |
+| `GET` | `/health/ready` | Readiness probe (banco conectado) |
+
 > **Nota:** Exceto rotas marcadas como públicas, todos os endpoints requerem autenticação via Bearer Token no header `Authorization`.
+
+## Health Checks
+
+A aplicação expõe endpoints para monitoramento:
+
+```bash
+# Status completo
+curl http://localhost:3000/health
+
+# Resposta de exemplo
+{
+  "status": "ok",
+  "info": {
+    "database": { "status": "up" },
+    "memory_heap": { "status": "up" },
+    "memory_rss": { "status": "up" },
+    "disk": { "status": "up" }
+  }
+}
+```
+
+### Indicadores
+
+| Indicador | Descrição | Limite |
+|-----------|-----------|--------|
+| `database` | Conexão com PostgreSQL | Ping OK |
+| `memory_heap` | Memória heap do Node.js | 300 MB |
+| `memory_rss` | Memória RSS do processo | 500 MB |
+| `disk` | Espaço em disco disponível | 5% livre |
+
+### Uso com Kubernetes
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /health/live
+    port: 3000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /health/ready
+    port: 3000
+  initialDelaySeconds: 5
+  periodSeconds: 5
+```
 
 ## Rate Limiting
 
