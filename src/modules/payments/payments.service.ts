@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
+import { EmailService } from '../email/email.service';
 import { UserDetailsDto } from '../user/dto/responses/user-details.dto';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -18,6 +19,7 @@ export class PaymentsService {
   constructor(
     private configService: ConfigService,
     private readonly userService: UserService,
+    private readonly emailService: EmailService,
   ) {
     const secretKey: string | undefined =
       this.configService.get<string>('STRIPE_SECRET_KEY');
@@ -89,9 +91,15 @@ export class PaymentsService {
       const session: Stripe.Checkout.Session = event.data.object;
       const customerId: string = session.customer as string;
 
-      return await this.userService.updateByCustomerId(customerId, {
+      const updatedUser = await this.userService.updateByCustomerId(customerId, {
         isPremium: true,
       });
+
+      if (updatedUser.email) {
+        await this.emailService.sendPaymentSuccessEmail(updatedUser.email);
+      }
+
+      return updatedUser;
     }
   }
 
