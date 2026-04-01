@@ -11,6 +11,7 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { SubscriptionGuard } from './common/guards/subscription.guard';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { EmailModule } from './modules/email/email.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { EmailModule } from './modules/email/email.module';
       },
     ]),
     EmailModule,
+    HealthModule,
     UserModule,
     AuthModule,
     PaymentsModule,
