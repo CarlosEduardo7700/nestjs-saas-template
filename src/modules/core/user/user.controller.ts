@@ -22,8 +22,9 @@ import { UserListDto } from './dto/responses/user-list.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { UserRole } from './enums/user-role.enum';
+import { MODERATOR_ROLES } from './enums/user-role.enum';
 import { EmailService } from '../email/email.service';
+import { AdminUpdateUserDto } from './dto/requests/admin-update-user.dto';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -84,10 +85,10 @@ export class UserController extends BaseController<
   }
 
   @Patch(':id')
-  @Roles(UserRole.ADMIN)
+  @Roles(...MODERATOR_ROLES)
   async update(
     @Param('id') id: string,
-    @Body() dto: UpdateUserDto,
+    @Body() dto: AdminUpdateUserDto,
   ): Promise<ControllerResponseDto> {
     const entityDetails: UserDetailsDto = await this.userService.update(
       id,
@@ -112,7 +113,7 @@ export class UserController extends BaseController<
   }
 
   @Get(':id')
-  @Roles(UserRole.ADMIN)
+  @Roles(...MODERATOR_ROLES)
   async findById(@Param('id') id: string): Promise<ControllerResponseDto> {
     const entityDetails: UserDetailsDto = await this.userService.findById(id);
 
@@ -135,7 +136,7 @@ export class UserController extends BaseController<
   }
 
   @Delete(':id')
-  @Roles(UserRole.ADMIN)
+  @Roles(...MODERATOR_ROLES)
   async deleteById(@Param('id') id: string): Promise<ControllerResponseDto> {
     await this.userService.deleteById(id);
 

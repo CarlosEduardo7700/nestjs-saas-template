@@ -2,12 +2,13 @@ import IBaseFactory from 'src/common/base/base-factory.interface';
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dto/requests/create-user.dto';
 import { UserDetailsDto } from '../dto/responses/user-details.dto';
-import { UserRole } from '../enums/user-role.enum';
 import { Injectable } from '@nestjs/common';
 import { UserListDto } from '../dto/responses/user-list.dto';
 import { UpdateUserDto } from '../dto/requests/update-user.dto';
 import bcrypt from 'bcryptjs';
 import { ConfigService } from '@nestjs/config';
+import { defineRole } from '../enums/user-role.enum';
+import { AdminUpdateUserDto } from '../dto/requests/admin-update-user.dto';
 
 @Injectable()
 export class UserFactory implements IBaseFactory<
@@ -29,7 +30,7 @@ export class UserFactory implements IBaseFactory<
 
     user.email = dto.email;
     user.password = await bcrypt.hash(dto.password, this.saltRounds);
-    user.role = dto.role || UserRole.USER;
+    user.role = defineRole();
     user.stripeCustomerId = dto.stripeCustomerId || '';
 
     return user;
@@ -63,7 +64,9 @@ export class UserFactory implements IBaseFactory<
     });
   }
 
-  async createUpdateDtoFromEntity(dto: UpdateUserDto): Promise<Partial<User>> {
+  async createUpdateDtoFromEntity(
+    dto: UpdateUserDto | AdminUpdateUserDto,
+  ): Promise<Partial<User>> {
     const updatedData: Partial<User> = {};
 
     if (dto.email) updatedData.email = dto.email;
@@ -72,13 +75,17 @@ export class UserFactory implements IBaseFactory<
       updatedData.passwordResetToken = undefined;
       updatedData.passwordResetExpires = undefined;
     }
-    if (dto.isPremium !== undefined) updatedData.isPremium = dto.isPremium;
-    if (dto.stripeCustomerId)
-      updatedData.stripeCustomerId = dto.stripeCustomerId;
-    if (dto.passwordResetToken)
-      updatedData.passwordResetToken = dto.passwordResetToken;
-    if (dto.passwordResetExpires)
-      updatedData.passwordResetExpires = dto.passwordResetExpires;
+
+    if (dto instanceof AdminUpdateUserDto) {
+      if (dto.isPremium !== undefined) updatedData.isPremium = dto.isPremium;
+      if (dto.stripeCustomerId)
+        updatedData.stripeCustomerId = dto.stripeCustomerId;
+      if (dto.passwordResetToken)
+        updatedData.passwordResetToken = dto.passwordResetToken;
+      if (dto.passwordResetExpires)
+        updatedData.passwordResetExpires = dto.passwordResetExpires;
+      if (dto.role) updatedData.role = dto.role;
+    }
 
     return updatedData;
   }

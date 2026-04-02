@@ -10,6 +10,7 @@ import { EmailService } from '../email/email.service';
 import { UserDetailsDto } from '../user/dto/responses/user-details.dto';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
+import { AdminUpdateUserDto } from '../user/dto/requests/admin-update-user.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -91,9 +92,12 @@ export class PaymentsService {
       const session: Stripe.Checkout.Session = event.data.object;
       const customerId: string = session.customer as string;
 
-      const updatedUser = await this.userService.updateByCustomerId(customerId, {
-        isPremium: true,
-      });
+      const updatedUser = await this.userService.updateByCustomerId(
+        customerId,
+        {
+          isPremium: true,
+        } as AdminUpdateUserDto,
+      );
 
       if (updatedUser.email) {
         await this.emailService.sendPaymentSuccessEmail(updatedUser.email);

@@ -15,6 +15,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { AdminUpdateUserDto } from '../user/dto/requests/admin-update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -63,7 +64,7 @@ export class AuthService {
     await this.userService.update(user.id, {
       passwordResetToken: hashedToken,
       passwordResetExpires: resetExpires,
-    });
+    } as AdminUpdateUserDto);
 
     await this.emailService.sendPasswordResetEmail(user.email, resetToken);
   }
@@ -74,7 +75,8 @@ export class AuthService {
       .update(resetPasswordDto.token)
       .digest('hex');
 
-    const user: User | null = await this.userService.getUserByResetToken(hashedToken);
+    const user: User | null =
+      await this.userService.getUserByResetToken(hashedToken);
 
     if (!user) {
       throw new BadRequestException('Invalid or expired reset token');
