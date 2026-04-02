@@ -31,7 +31,6 @@ export class UserFactory implements IBaseFactory<
     user.email = dto.email;
     user.password = await bcrypt.hash(dto.password, this.saltRounds);
     user.role = defineRole();
-    user.stripeCustomerId = dto.stripeCustomerId || '';
 
     return user;
   }

@@ -56,7 +56,7 @@ export class PaymentsService {
 
     await this.userService.update(user.id, {
       stripeCustomerId: customer.id,
-    });
+    } as AdminUpdateUserDto);
 
     return customer.id;
   }

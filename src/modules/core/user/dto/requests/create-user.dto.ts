@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsOptional,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
@@ -20,8 +14,4 @@ export class CreateUserDto {
       'The password must contain at least an uppercase letter, a lowercase letter, a number, and a special character (!@#$%^&*).',
   })
   password: string;
-
-  @IsOptional()
-  @IsString()
-  stripeCustomerId?: string;
 }
