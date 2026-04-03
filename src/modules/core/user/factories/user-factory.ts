@@ -63,7 +63,7 @@ export class UserFactory implements IBaseFactory<
     });
   }
 
-  async createUpdateDtoFromEntity(
+  async createUpdatedEntityFromDto(
     dto: UpdateUserDto | AdminUpdateUserDto,
   ): Promise<Partial<User>> {
     const updatedData: Partial<User> = {};
