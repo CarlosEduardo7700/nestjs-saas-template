@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/base/base.service';
 import { MoreThan, Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { UserDetailsDto } from './dto/responses/user-details.dto';
 import { UserListDto } from './dto/responses/user-list.dto';
 import { UserFactory } from './factories/user-factory';
 import { User } from './user.entity';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UserService extends BaseService<
@@ -17,12 +18,25 @@ export class UserService extends BaseService<
   UserListDto,
   UpdateUserDto
 > {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly userFactory: UserFactory,
+    private readonly emailService: EmailService,
   ) {
     super(userRepository, userFactory);
+  }
+
+  async create(dto: CreateUserDto): Promise<UserDetailsDto> {
+    const entityDetails: UserDetailsDto = await super.create(dto);
+
+    this.emailService.sendWelcomeEmail(entityDetails.email).catch((error) => {
+      this.logger.error('Failed to send welcome email:', error);
+    });
+
+    return entityDetails;
   }
 
   async getUserByEmailForAuth(email: string): Promise<User | null> {

@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Logger,
   Param,
   Patch,
   Post,
@@ -23,7 +22,6 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { MODERATOR_ROLES } from './enums/user-role.enum';
-import { EmailService } from '../email/email.service';
 import { AdminUpdateUserDto } from './dto/requests/admin-update-user.dto';
 import { RATE_LIMITS_FOR_USERS_CREATE } from 'src/configs/rate-limiting/user.rate-limits';
 
@@ -37,12 +35,7 @@ export class UserController extends BaseController<
   UserListDto,
   UpdateUserDto
 > {
-  private readonly logger = new Logger(UserController.name);
-
-  constructor(
-    private readonly userService: UserService,
-    private readonly emailService: EmailService,
-  ) {
+  constructor(private readonly userService: UserService) {
     super(userService);
   }
 
@@ -52,10 +45,6 @@ export class UserController extends BaseController<
   @Throttle(RATE_LIMITS_FOR_USERS_CREATE)
   async create(@Body() dto: CreateUserDto): Promise<ControllerResponseDto> {
     const entityDetails: UserDetailsDto = await this.userService.create(dto);
-
-    this.emailService.sendWelcomeEmail(entityDetails.email).catch((error) => {
-      this.logger.error('Failed to send welcome email:', error);
-    });
 
     return {
       message: 'Created successfully!',
