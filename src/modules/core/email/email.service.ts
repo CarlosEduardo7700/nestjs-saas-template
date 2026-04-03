@@ -64,7 +64,7 @@ export class EmailService {
       appName: this.appName,
       name: name || email.split('@')[0],
       loginUrl: `${this.frontendUrl}/login`,
-    }) as string;
+    });
 
     await this.sendEmail({
       to: email,
@@ -83,7 +83,7 @@ export class EmailService {
       appName: this.appName,
       resetUrl,
       expiresIn: '1 hour',
-    }) as string;
+    });
 
     await this.sendEmail({
       to: email,
@@ -96,7 +96,7 @@ export class EmailService {
     const html: string = getPasswordResetSuccessTemplate({
       appName: this.appName,
       loginUrl: `${this.frontendUrl}/login`,
-    }) as string;
+    });
 
     await this.sendEmail({
       to: email,
@@ -113,7 +113,7 @@ export class EmailService {
       appName: this.appName,
       planName,
       dashboardUrl: `${this.frontendUrl}/dashboard`,
-    }) as string;
+    });
 
     await this.sendEmail({
       to: email,
