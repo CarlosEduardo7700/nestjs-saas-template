@@ -12,6 +12,7 @@ import { SubscriptionGuard } from './common/guards/subscription.guard';
 import { PaymentsModule } from './modules/core/payments/payments.module';
 import { EmailModule } from './modules/core/email/email.module';
 import { HealthModule } from './modules/core/health/health.module';
+import { GLOBAL_RATE_LIMIT } from './configs/rate-limiting/global.rate-limits';
 
 @Module({
   imports: [
@@ -21,23 +22,7 @@ import { HealthModule } from './modules/core/health/health.module';
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConfigService,
     }),
-    ThrottlerModule.forRoot([
-      {
-        name: 'short',
-        ttl: 1000,
-        limit: 3,
-      },
-      {
-        name: 'medium',
-        ttl: 10000,
-        limit: 20,
-      },
-      {
-        name: 'long',
-        ttl: 60000,
-        limit: 100,
-      },
-    ]),
+    ThrottlerModule.forRoot(GLOBAL_RATE_LIMIT),
     EmailModule,
     HealthModule,
     UserModule,

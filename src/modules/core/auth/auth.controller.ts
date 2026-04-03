@@ -8,6 +8,11 @@ import { LoginResponseDto } from './dto/login-response.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import {
+  RATE_LIMITS_FOR_AUTH_LOGIN,
+  RATE_LIMITS_FOR_AUTH_FORGOT_PASSWORD,
+  RATE_LIMITS_FOR_AUTH_RESET_PASSWORD,
+} from 'src/configs/rate-limiting/auth.rate-limits';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -17,11 +22,7 @@ export class AuthController {
   @Post('/login')
   @Public()
   @ApiOperation({ summary: 'Authenticate user and get JWT token' })
-  @Throttle({
-    short: { ttl: 1000, limit: 1 },
-    medium: { ttl: 60000, limit: 5 },
-    long: { ttl: 3600000, limit: 20 },
-  })
+  @Throttle(RATE_LIMITS_FOR_AUTH_LOGIN)
   async login(@Body() loginDto: LoginDto): Promise<ControllerResponseDto> {
     const token: LoginResponseDto = await this.authService.login(loginDto);
 
@@ -34,11 +35,7 @@ export class AuthController {
   @Post('/forgot-password')
   @Public()
   @ApiOperation({ summary: 'Request password reset email' })
-  @Throttle({
-    short: { ttl: 1000, limit: 1 },
-    medium: { ttl: 60000, limit: 3 },
-    long: { ttl: 3600000, limit: 5 },
-  })
+  @Throttle(RATE_LIMITS_FOR_AUTH_FORGOT_PASSWORD)
   async forgotPassword(
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<ControllerResponseDto> {
@@ -53,11 +50,7 @@ export class AuthController {
   @Post('/reset-password')
   @Public()
   @ApiOperation({ summary: 'Reset password with token' })
-  @Throttle({
-    short: { ttl: 1000, limit: 1 },
-    medium: { ttl: 60000, limit: 5 },
-    long: { ttl: 3600000, limit: 10 },
-  })
+  @Throttle(RATE_LIMITS_FOR_AUTH_RESET_PASSWORD)
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<ControllerResponseDto> {

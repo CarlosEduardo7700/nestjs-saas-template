@@ -25,6 +25,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { MODERATOR_ROLES } from './enums/user-role.enum';
 import { EmailService } from '../email/email.service';
 import { AdminUpdateUserDto } from './dto/requests/admin-update-user.dto';
+import { RATE_LIMITS_FOR_USERS_CREATE } from 'src/configs/rate-limiting/user.rate-limits';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -48,11 +49,7 @@ export class UserController extends BaseController<
   @Post()
   @Public()
   @ApiOperation({ summary: 'Create a new user (public)' })
-  @Throttle({
-    short: { ttl: 1000, limit: 1 },
-    medium: { ttl: 60000, limit: 5 },
-    long: { ttl: 3600000, limit: 10 },
-  })
+  @Throttle(RATE_LIMITS_FOR_USERS_CREATE)
   async create(@Body() dto: CreateUserDto): Promise<ControllerResponseDto> {
     const entityDetails: UserDetailsDto = await this.userService.create(dto);
 
