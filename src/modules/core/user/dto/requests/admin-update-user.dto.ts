@@ -15,7 +15,7 @@ export class AdminUpdateUserDto extends UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  stripeCustomerId?: string;
+  paymentCustomerId?: string;
 
   @IsOptional()
   @IsBoolean()

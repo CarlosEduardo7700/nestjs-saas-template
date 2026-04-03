@@ -42,7 +42,7 @@ export class UserService extends BaseService<
   async getUserByIdForPayment(userId: string): Promise<User> {
     const user: User | null = await this.userRepository.findOne({
       where: { id: userId },
-      select: ['id', 'email', 'stripeCustomerId'],
+      select: ['id', 'email', 'paymentCustomerId'],
     });
 
     if (!user) throw new NotFoundException('User not found');
@@ -65,7 +65,7 @@ export class UserService extends BaseService<
     updateUserDto: UpdateUserDto,
   ): Promise<UserDetailsDto> {
     const user: User | null = await this.userRepository.findOne({
-      where: { stripeCustomerId: customerId },
+      where: { paymentCustomerId: customerId },
     });
 
     if (!user) throw new NotFoundException('User not found');

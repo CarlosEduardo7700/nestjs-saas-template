@@ -17,7 +17,7 @@ export class User extends BaseEntity {
   isPremium: boolean;
 
   @Column({ nullable: true })
-  stripeCustomerId?: string;
+  paymentCustomerId?: string;
 
   @Column({ nullable: true, select: false })
   passwordResetToken?: string;

@@ -77,8 +77,8 @@ export class UserFactory implements IBaseFactory<
 
     if (dto instanceof AdminUpdateUserDto) {
       if (dto.isPremium !== undefined) updatedData.isPremium = dto.isPremium;
-      if (dto.stripeCustomerId)
-        updatedData.stripeCustomerId = dto.stripeCustomerId;
+      if (dto.paymentCustomerId)
+        updatedData.paymentCustomerId = dto.paymentCustomerId;
       if (dto.passwordResetToken)
         updatedData.passwordResetToken = dto.passwordResetToken;
       if (dto.passwordResetExpires)

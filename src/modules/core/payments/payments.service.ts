@@ -46,7 +46,7 @@ export class PaymentsService {
   async getOrCreateStripeCustomerIdForUser(userId: string): Promise<string> {
     const user: User = await this.userService.getUserByIdForPayment(userId);
 
-    if (user?.stripeCustomerId) return user.stripeCustomerId;
+    if (user?.paymentCustomerId) return user.paymentCustomerId;
 
     const customer: Stripe.Response<Stripe.Customer> =
       await this.stripe.customers.create({
@@ -55,7 +55,7 @@ export class PaymentsService {
       });
 
     await this.userService.update(user.id, {
-      stripeCustomerId: customer.id,
+      paymentCustomerId: customer.id,
     } as AdminUpdateUserDto);
 
     return customer.id;
