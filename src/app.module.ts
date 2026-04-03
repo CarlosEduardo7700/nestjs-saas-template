@@ -12,7 +12,7 @@ import { SubscriptionGuard } from './common/guards/subscription.guard';
 import { PaymentsModule } from './modules/core/payments/payments.module';
 import { EmailModule } from './modules/core/email/email.module';
 import { HealthModule } from './modules/core/health/health.module';
-import { GLOBAL_RATE_LIMIT } from './configs/rate-limiting/global.rate-limits';
+import { GLOBAL_RATE_LIMIT } from './common/constants/rate-limiting/global.rate-limits';
 
 @Module({
   imports: [

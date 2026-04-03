@@ -12,7 +12,7 @@ import {
   RATE_LIMITS_FOR_AUTH_LOGIN,
   RATE_LIMITS_FOR_AUTH_FORGOT_PASSWORD,
   RATE_LIMITS_FOR_AUTH_RESET_PASSWORD,
-} from 'src/configs/rate-limiting/auth.rate-limits';
+} from 'src/common/constants/rate-limiting/auth.rate-limits';
 
 @ApiTags('Auth')
 @Controller('auth')

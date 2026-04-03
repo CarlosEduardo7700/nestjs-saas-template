@@ -23,7 +23,7 @@ import { UserService } from './user.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { MODERATOR_ROLES } from './enums/user-role.enum';
 import { AdminUpdateUserDto } from './dto/requests/admin-update-user.dto';
-import { RATE_LIMITS_FOR_USERS_CREATE } from 'src/configs/rate-limiting/user.rate-limits';
+import { RATE_LIMITS_FOR_USERS_CREATE } from 'src/common/constants/rate-limiting/user.rate-limits';
 
 @ApiTags('User')
 @ApiBearerAuth()
