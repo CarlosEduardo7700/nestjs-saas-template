@@ -1,9 +1,20 @@
-import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
 
 export class CreateUserDto {
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  name: string;
+
   @IsEmail()
   email: string;
 

@@ -28,6 +28,7 @@ export class UserFactory implements IBaseFactory<
   async createEntityFromDto(dto: CreateUserDto): Promise<User> {
     const user = new User();
 
+    user.name = dto.name;
     user.email = dto.email;
     user.password = await bcrypt.hash(dto.password, this.saltRounds);
     user.role = defineRole();
@@ -39,6 +40,7 @@ export class UserFactory implements IBaseFactory<
     const userDetails = new UserDetailsDto();
 
     userDetails.id = entity.id;
+    userDetails.name = entity.name;
     userDetails.email = entity.email;
     userDetails.role = entity.role;
     userDetails.isPremium = entity.isPremium;
@@ -54,6 +56,7 @@ export class UserFactory implements IBaseFactory<
       const userList = new UserListDto();
 
       userList.id = entity.id;
+      userList.name = entity.name;
       userList.email = entity.email;
       userList.isPremium = entity.isPremium;
       userList.role = entity.role;
@@ -68,6 +71,7 @@ export class UserFactory implements IBaseFactory<
   ): Promise<Partial<User>> {
     const updatedData: Partial<User> = {};
 
+    if (dto.name) updatedData.name = dto.name;
     if (dto.email) updatedData.email = dto.email;
     if (dto.password) {
       updatedData.password = await bcrypt.hash(dto.password, this.saltRounds);
