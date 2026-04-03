@@ -5,12 +5,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
-import {
-  getWelcomeEmailTemplate,
-  getPasswordResetTemplate,
-  getPaymentSuccessTemplate,
-  getPasswordResetSuccessTemplate,
-} from './templates/email.templates';
+import { getPasswordResetSuccessTemplate } from './templates/password-reset-success.template';
+import { getPasswordResetTemplate } from './templates/password-reset.template';
+import { getPaymentSuccessTemplate } from './templates/payment-success.template';
+import { getWelcomeEmailTemplate } from './templates/welcome.template';
 
 export interface SendEmailOptions {
   to: string;
