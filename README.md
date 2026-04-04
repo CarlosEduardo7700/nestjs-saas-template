@@ -242,19 +242,36 @@ Na interface do Swagger você pode:
 
 ## CORS
 
-CORS está configurado por padrão para aceitar requisições do frontend:
+CORS está configurado em `src/configs/cors.config.ts`:
 
 ```typescript
-// main.ts
-app.enableCors({
+export const corsConfig: CorsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:3001',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-});
+};
 ```
 
 Para produção, defina `FRONTEND_URL` no `.env` com a URL do seu frontend.
+
+## Estrutura de Configurações
+
+As configurações da aplicação estão centralizadas em `src/configs/`:
+
+```
+src/configs/
+├── cors.config.ts              # Configuração de CORS
+├── swagger.config.ts           # Configuração do Swagger/OpenAPI
+├── validation.config.ts        # Configuração do ValidationPipe
+└── rate-limiting/              # Configurações de rate limiting
+    ├── interfaces/
+    ├── global.rate-limits.ts
+    ├── auth.rate-limits.ts
+    └── user.rate-limits.ts
+```
+
+Cada arquivo exporta uma configuração tipada que é importada no `main.ts` ou nos módulos correspondentes.
 
 ## Health Checks
 
