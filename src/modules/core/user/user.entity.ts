@@ -19,12 +19,12 @@ export class User extends BaseEntity {
   @Column({ default: false })
   isPremium: boolean;
 
-  @Column({ nullable: true })
-  paymentCustomerId?: string;
+  @Column({ nullable: true, type: 'varchar' })
+  paymentCustomerId: string | null;
 
-  @Column({ nullable: true, select: false })
-  passwordResetToken?: string;
+  @Column({ nullable: true, select: false, type: 'varchar' })
+  passwordResetToken: string | null;
 
   @Column({ type: 'timestamp', nullable: true, select: false })
-  passwordResetExpires?: Date;
+  passwordResetExpires: Date | null;
 }

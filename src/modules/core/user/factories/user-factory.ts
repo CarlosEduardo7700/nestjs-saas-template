@@ -75,20 +75,18 @@ export class UserFactory implements IBaseFactory<
     if (dto.email) updatedData.email = dto.email;
     if (dto.password) {
       updatedData.password = await bcrypt.hash(dto.password, this.saltRounds);
-      updatedData.passwordResetToken = undefined;
-      updatedData.passwordResetExpires = undefined;
+      updatedData.passwordResetToken = null;
+      updatedData.passwordResetExpires = null;
     }
 
-    if (dto instanceof AdminUpdateUserDto) {
-      if (dto.isPremium !== undefined) updatedData.isPremium = dto.isPremium;
-      if (dto.paymentCustomerId)
-        updatedData.paymentCustomerId = dto.paymentCustomerId;
-      if (dto.passwordResetToken)
-        updatedData.passwordResetToken = dto.passwordResetToken;
-      if (dto.passwordResetExpires)
-        updatedData.passwordResetExpires = dto.passwordResetExpires;
-      if (dto.role) updatedData.role = dto.role;
-    }
+    if ('isPremium' in dto) updatedData.isPremium = dto.isPremium;
+    if ('paymentCustomerId' in dto)
+      updatedData.paymentCustomerId = dto.paymentCustomerId;
+    if ('passwordResetToken' in dto)
+      updatedData.passwordResetToken = dto.passwordResetToken;
+    if ('passwordResetExpires' in dto)
+      updatedData.passwordResetExpires = dto.passwordResetExpires;
+    if ('role' in dto) updatedData.role = dto.role;
 
     return updatedData;
   }

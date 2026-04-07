@@ -82,15 +82,10 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired reset token');
     }
 
-    const saltRounds: number = parseInt(
-      this.configService.get<string>('SALT_ROUNDS') || '10',
-    );
-    const hashedPassword: string = await bcrypt.hash(
+    await this.userService.updatePassword(
+      user.id,
       resetPasswordDto.newPassword,
-      saltRounds,
     );
-
-    await this.userService.updatePassword(user.id, hashedPassword);
 
     await this.emailService.sendPasswordResetSuccessEmail(user.email);
   }
