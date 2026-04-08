@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -85,6 +86,16 @@ export class UserController extends BaseController<
       message: `Updated successfully! ID: ${id}`,
       data: entityDetails,
     };
+  }
+
+  @Get()
+  @Roles(...MODERATOR_ROLES)
+  @ApiOperation({ summary: 'List all users (moderator only)' })
+  async findAll(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ): Promise<ControllerResponseDto> {
+    return super.findAll(page, limit);
   }
 
   @Get('me')
