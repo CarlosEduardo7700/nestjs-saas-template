@@ -273,6 +273,74 @@ src/configs/
 
 Cada arquivo exporta uma configuração tipada que é importada no `main.ts` ou nos módulos correspondentes.
 
+## Stripe
+
+A aplicação utiliza Stripe para processamento de pagamentos e gerenciamento de assinaturas.
+
+### Configuração
+
+1. Crie uma conta no [Stripe](https://stripe.com/) e obtenha as chaves de API
+2. Configure as variáveis de ambiente no `.env`:
+
+### Fluxo de Pagamento
+
+1. Usuário autenticado chama `POST /payments/checkout`
+2. API cria uma sessão de checkout no Stripe e retorna a URL
+3. Usuário é redirecionado para página de pagamento do Stripe
+4. Após pagamento, Stripe envia evento para `POST /payments/webhook`
+5. Webhook processa o evento e atualiza `isPremium` do usuário
+
+### Testar Webhooks em Desenvolvimento
+
+Para receber eventos do Stripe localmente, use o Stripe CLI:
+
+```bash
+# Instalar Stripe CLI (Windows - via Scoop)
+scoop install stripe
+
+# Ou via Chocolatey
+choco install stripe-cli
+
+# Login no Stripe
+stripe login
+
+# Encaminhar webhooks para sua aplicação local
+stripe listen --forward-to localhost:3000/payments/webhook
+```
+
+O comando `stripe listen` irá exibir um `webhook signing secret` (começa com `whsec_`). Use esse valor na variável `STRIPE_WEBHOOK_SECRET` do `.env`.
+
+### Testar Pagamentos
+
+Em modo teste, use os cartões de teste do Stripe:
+
+| Cartão | Número | Resultado |
+|--------|--------|-----------|
+| Sucesso | `4242 4242 4242 4242` | Pagamento aprovado |
+| Recusado | `4000 0000 0000 0002` | Cartão recusado |
+| Autenticação | `4000 0025 0000 3155` | Requer 3D Secure |
+
+Use qualquer data futura para validade e qualquer CVC de 3 dígitos.
+
+### Proteger Rotas Premium
+
+Use o decorator `@Premium()` para restringir rotas a usuários com assinatura ativa:
+
+```typescript
+import { Premium } from 'src/common/decorators/premium.decorator';
+
+@Controller('features')
+export class FeaturesController {
+  @Get('advanced')
+  @Premium()  // Apenas usuários com isPremium: true
+  async premiumFeature() {
+    return { data: 'Conteúdo exclusivo para assinantes!' };
+  }
+}
+```
+
+O `SubscriptionGuard` (já configurado globalmente) verifica automaticamente o campo `isPremium` no JWT do usuário. Se o usuário não for premium, retorna `403 Forbidden`.
+
 ## Health Checks
 
 ### Indicadores
