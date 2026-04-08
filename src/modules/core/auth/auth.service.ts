@@ -82,10 +82,11 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired reset token');
     }
 
-    await this.userService.updatePassword(
-      user.id,
-      resetPasswordDto.newPassword,
-    );
+    await this.userService.update(user.id, {
+      password: resetPasswordDto.newPassword,
+      passwordResetToken: null,
+      passwordResetExpires: null,
+    } as AdminUpdateUserDto);
 
     await this.emailService.sendPasswordResetSuccessEmail(user.email);
   }

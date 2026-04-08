@@ -9,7 +9,6 @@ import { UserListDto } from './dto/responses/user-list.dto';
 import { UserFactory } from './factories/user-factory';
 import { User } from './user.entity';
 import { EmailService } from '../email/email.service';
-import { AdminUpdateUserDto } from './dto/requests/admin-update-user.dto';
 
 @Injectable()
 export class UserService extends BaseService<
@@ -86,13 +85,5 @@ export class UserService extends BaseService<
     if (!user) throw new NotFoundException('User not found');
 
     return this.update(user.id, updateUserDto);
-  }
-
-  async updatePassword(userId: string, newPassword: string): Promise<void> {
-    await this.update(userId, {
-      password: newPassword,
-      passwordResetToken: null,
-      passwordResetExpires: null,
-    } as AdminUpdateUserDto);
   }
 }
