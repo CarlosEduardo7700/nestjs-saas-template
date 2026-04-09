@@ -1,10 +1,10 @@
 {
   "name": "nestjs-saas-template",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.0.0",
+  "description": "A starter template for building SaaS applications with NestJS, TypeORM, JWT, Stripe, and Resend",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -21,6 +21,7 @@
     "typeorm": "typeorm-ts-node-commonjs -d src/database/config/datasource-cli.config.ts",
     "migration:generate": "npm run typeorm -- migration:generate",
     "migration:run": "npm run typeorm -- migration:run",
+    "migration:show": "npm run typeorm -- migration:show",
     "migration:revert": "npm run typeorm -- migration:revert",
     "migration:create": "npm run typeorm -- migration:create"
   },

@@ -3,15 +3,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfigService } from './database/config/database.config.service';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { UserModule } from './modules/user/user.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/core/user/user.module';
+import { AuthModule } from './modules/core/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './common/guards/auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SubscriptionGuard } from './common/guards/subscription.guard';
-import { PaymentsModule } from './modules/payments/payments.module';
-import { EmailModule } from './modules/email/email.module';
-import { HealthModule } from './modules/health/health.module';
+import { PaymentsModule } from './modules/core/payments/payments.module';
+import { EmailModule } from './modules/core/email/email.module';
+import { HealthModule } from './modules/core/health/health.module';
+import { GLOBAL_RATE_LIMIT } from './common/constants/rate-limiting/global.rate-limits';
 
 @Module({
   imports: [
@@ -21,23 +22,7 @@ import { HealthModule } from './modules/health/health.module';
     TypeOrmModule.forRootAsync({
       useClass: DatabaseConfigService,
     }),
-    ThrottlerModule.forRoot([
-      {
-        name: 'short',
-        ttl: 1000,
-        limit: 3,
-      },
-      {
-        name: 'medium',
-        ttl: 10000,
-        limit: 20,
-      },
-      {
-        name: 'long',
-        ttl: 60000,
-        limit: 100,
-      },
-    ]),
+    ThrottlerModule.forRoot(GLOBAL_RATE_LIMIT),
     EmailModule,
     HealthModule,
     UserModule,

@@ -81,7 +81,7 @@ export abstract class BaseService<
     if (!entity) throw new NotFoundException('Data not found!');
 
     const updatedData: Partial<TEntity> =
-      await this.factory.createUpdateDtoFromEntity(dto);
+      await this.factory.createUpdatedEntityFromDto(dto);
 
     Object.assign(entity, updatedData);
 

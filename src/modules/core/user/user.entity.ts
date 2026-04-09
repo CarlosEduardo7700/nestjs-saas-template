@@ -1,0 +1,30 @@
+import { Column, Entity } from 'typeorm';
+import { DEFAULT_ROLE, UserRole } from './enums/user-role.enum';
+import { BaseEntity } from 'src/common/base/base.entity';
+
+@Entity({ name: 'users' })
+export class User extends BaseEntity {
+  @Column({ name: 'name', length: 255, nullable: false })
+  name: string;
+
+  @Column({ name: 'email', length: 255, nullable: false, unique: true })
+  email: string;
+
+  @Column({ name: 'password', length: 100, nullable: false, select: false })
+  password: string;
+
+  @Column({ type: 'enum', enum: UserRole, default: DEFAULT_ROLE })
+  role: UserRole;
+
+  @Column({ default: false })
+  isPremium: boolean;
+
+  @Column({ nullable: true, type: 'varchar' })
+  paymentCustomerId: string | null;
+
+  @Column({ nullable: true, select: false, type: 'varchar' })
+  passwordResetToken: string | null;
+
+  @Column({ type: 'timestamp', nullable: true, select: false })
+  passwordResetExpires: Date | null;
+}
