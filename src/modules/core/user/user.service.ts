@@ -86,4 +86,12 @@ export class UserService extends BaseService<
 
     return this.update(user.id, updateUserDto);
   }
+
+  async validateUserForAuth(userId: string): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id: userId },
+      select: ['id', 'email', 'role', 'isPremium', 'deletedAt'],
+      withDeleted: true,
+    });
+  }
 }

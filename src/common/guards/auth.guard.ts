@@ -1,15 +1,18 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   Logger,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from '../interface/jwt-payload.interface';
 import { AuthRequest } from '../interface/auth-request.interface';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
+import { UserService } from 'src/modules/core/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -18,6 +21,8 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -34,8 +39,21 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload: JwtPayload = await this.jwtService.verifyAsync(token);
-      request.userData = payload;
+
+      const user = await this.userService.validateUserForAuth(payload.sub);
+
+      if (!user || user.deletedAt) {
+        throw new UnauthorizedException('User no longer exists.');
+      }
+
+      request.userData = {
+        sub: user.id,
+        email: user.email,
+        role: user.role,
+        isPremium: user.isPremium,
+      };
     } catch (error) {
+      if (error instanceof UnauthorizedException) throw error;
       this.logger.warn(`Token verification failed: ${error}`);
       throw new UnauthorizedException('Invalid or expired token.');
     }
